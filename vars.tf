@@ -3,6 +3,7 @@
 
 variable "prefix" {
   description = "The prefix which should be used for all resources in this project"
+  default = "project"
 }
 
 variable "location" {
@@ -10,12 +11,17 @@ variable "location" {
   default     = "East US"
 }
 
+variable "vm_number" {
+  description = "The number of the VMs"
+  default = 3
+}
+
 variable "username" {
-  description = "Username to be used in the VM"
-  default     = "AdminUser"
+  description = "The admin-Username for VM"
+  default     = "Admin-username"
 }
 
 variable "password" {
-  description = "Password to be used in the VM"
-  default     = "A@min123"
+  description = "The admin-password for VM"
+  default     = "Admin@Password1"
 }
