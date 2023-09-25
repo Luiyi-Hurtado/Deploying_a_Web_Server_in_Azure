@@ -110,13 +110,21 @@ If you need to remove the resources created by Terraform, use the following comm
 
 ## Output
 
-### 1. Create an Azure Policy
+### 1. Create and check an Azure Policy
 
 ```sh
 ~/Deploying_a_Web_Server_in_Azure$ az policy definition create --name taggin-policy --rules policy.json
 Mode     Name           PolicyType
 -------  -------------  ------------
 Indexed  taggin-policy  Custom
+```
+
+```sh
+/projects/Deploying_a_Web_Server_in_Azure$ az policy assignment list
+Description                                                                                                                                                                                                                                                        DisplayName                                                       EnforcementMode    Name                                    PolicyDefinitionId                                                                                                                              Scope
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  ----------------------------------------------------------------  -----------------  --------------------------------------  ----------------------------------------------------------------------------------------------------------------------------------------------  ---------------------------------------------------
+clouddevops674-241797-PolicyDefinition                                                                                                                                                                                                                             clouddevops674-241797-PolicyDefinition                            Default            clouddevops674-241797-PolicyDefinition  /subscriptions/fe543d6c-d65a-4f94-99e0-886fb95f57dd/providers/Microsoft.Authorization/policyDefinitions/clouddevops674-241797-PolicyDefinition  /subscriptions/fe543d6c-d65a-4f94-99e0-886fb95f57dd
+This is the default set of policies monitored by Azure Security Center. It was automatically assigned as part of onboarding to Security Center. The default assignment contains only audit policies. For more information please visit https://aka.ms/ascpolicies  ASC Default (subscription: fe543d6c-d65a-4f94-99e0-886fb95f57dd)  Default            SecurityCenterBuiltIn                   /providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8                                                    /subscriptions/fe543d6c-d65a-4f94-99e0-886fb95f57dd
 ```
 
 ### 2. Build an Image with Packer
@@ -529,6 +537,19 @@ Saved the plan to: solution.plan
 To perform exactly these actions, run the following command to apply:
     terraform apply "solution.plan"
 ```
+
+### 4. Terraform Apply
+
+```sh
+~/Deploying_a_Web_Server_in_Azure$ terraform apply solution.plan 
+azurerm_resource_group.main: Creating...
+╷
+│ Error: creating Resource Group "project-resource": resources.GroupsClient#CreateOrUpdate: Failure responding to request: StatusCode=403 -- Original Error: autorest/azure: Service returned an error. Status=403 Code="AuthorizationFailed" Message="The client 'odl_user_241797@udacityhol.onmicrosoft.com' with object id 'abc803fd-4e46-49c1-af9e-95196208552b' does not have authorization to perform action 'Microsoft.Resources/subscriptions/resourcegroups/write' over scope '/subscriptions/fe543d6c-d65a-4f94-99e0-886fb95f57dd/resourcegroups/project-resource' or the scope is invalid. If access was recently granted, please refresh your credentials."
+│ 
+│   with azurerm_resource_group.main,
+│   on main.tf line 8, in resource "azurerm_resource_group" "main":
+│    8: resource "azurerm_resource_group" "main" {
+  ```
 
 ## Conclusion
 
