@@ -35,7 +35,7 @@ For this project, you will write a Packer template and a Terraform template to d
 
 * Create an Azure Policy Definition using the following command. Replace ```<policy name>``` with your desired policy name and ```<filename>``` with the path to your policy definition rules file:
 
-    ```bash
+    ```sh
     az policy definition create --name <policy name> --rules <filename>
     ```
 
@@ -43,7 +43,7 @@ For this project, you will write a Packer template and a Terraform template to d
 
 * Build a custom image using Packer by running the following command. Replace ```<filename>``` with the path to your Packer configuration file:
 
-     ```bash
+     ```sh
      packer build <filename>
      ```
 
@@ -112,46 +112,110 @@ If you need to remove the resources created by Terraform, use the following comm
 
 ### 1. Create and check an Azure Policy
 
-```sh
-~/Deploying_a_Web_Server_in_Azure$ az policy definition create --name taggin-policy --rules policy.json
-Mode     Name           PolicyType
--------  -------------  ------------
-Indexed  taggin-policy  Custom
+```powershell
+PS C:\Deploying_a_Web_Server_in_Azure> az policy definition create --name taggin-policy --rules .\policy.json
+{
+  "description": null,
+  "displayName": null,
+  "id": "/subscriptions/c2974833-f9d6-49e2-b843-74513c83a919/providers/Microsoft.Authorization/policyDefinitions/taggin-policy",
+  "metadata": {
+    "createdBy": "e7fc96b6-185e-4c4a-9461-ee1be25588da",
+    "createdOn": "2023-09-26T03:27:19.215999Z",
+    "updatedBy": null,
+    "updatedOn": null
+  },
+  "mode": "Indexed",
+  "name": "taggin-policy",
+  "parameters": null,
+  "policyRule": {
+    "if": {
+      "exists": "false",
+      "field": "tags"
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "policyType": "Custom",
+  "systemData": {
+    "createdAt": "2023-09-26T03:27:19.168162+00:00",
+    "createdBy": "odl_user_241820@udacityhol.onmicrosoft.com",
+    "createdByType": "User",
+    "lastModifiedAt": "2023-09-26T03:27:19.168162+00:00",
+    "lastModifiedBy": "odl_user_241820@udacityhol.onmicrosoft.com",
+    "lastModifiedByType": "User"
+  },
+  "type": "Microsoft.Authorization/policyDefinitions"
+}
 ```
 
-```sh
-/projects/Deploying_a_Web_Server_in_Azure$ az policy assignment list
-Description                                                                                                                                                                                                                                                        DisplayName                                                       EnforcementMode    Name                                    PolicyDefinitionId                                                                                                                              Scope
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  ----------------------------------------------------------------  -----------------  --------------------------------------  ----------------------------------------------------------------------------------------------------------------------------------------------  ---------------------------------------------------
-clouddevops674-241797-PolicyDefinition                                                                                                                                                                                                                             clouddevops674-241797-PolicyDefinition                            Default            clouddevops674-241797-PolicyDefinition  /subscriptions/fe543d6c-d65a-4f94-99e0-886fb95f57dd/providers/Microsoft.Authorization/policyDefinitions/clouddevops674-241797-PolicyDefinition  /subscriptions/fe543d6c-d65a-4f94-99e0-886fb95f57dd
-This is the default set of policies monitored by Azure Security Center. It was automatically assigned as part of onboarding to Security Center. The default assignment contains only audit policies. For more information please visit https://aka.ms/ascpolicies  ASC Default (subscription: fe543d6c-d65a-4f94-99e0-886fb95f57dd)  Default            SecurityCenterBuiltIn                   /providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8                                                    /subscriptions/fe543d6c-d65a-4f94-99e0-886fb95f57dd
+```powershell
+PS C:\Deploying_a_Web_Server_in_Azure> az policy assignment list
+[
+  {
+    "description": "clouddevops674-241820-PolicyDefinition",
+    "displayName": "clouddevops674-241820-PolicyDefinition",
+    "enforcementMode": "Default",
+    "id": "/subscriptions/c2974833-f9d6-49e2-b843-74513c83a919/providers/Microsoft.Authorization/policyAssignments/clouddevops674-241820-PolicyDefinition",
+    "identity": null,
+    "location": null,
+    "metadata": {
+      "createdBy": "f797eca9-5d09-44b6-b23f-98732363911c",
+      "createdOn": "2023-09-26T03:24:09.6455579Z",
+      "updatedBy": null,
+      "updatedOn": null
+    },
+    "name": "clouddevops674-241820-PolicyDefinition",
+    "nonComplianceMessages": null,
+    "notScopes": null,
+    "parameters": null,
+    "policyDefinitionId": "/subscriptions/c2974833-f9d6-49e2-b843-74513c83a919/providers/Microsoft.Authorization/policyDefinitions/clouddevops674-241820-PolicyDefinition",
+    "scope": "/subscriptions/c2974833-f9d6-49e2-b843-74513c83a919",
+    "systemData": {
+      "createdAt": "2023-09-26T03:24:09.589345+00:00",
+      "createdBy": "0609ced8-c8f7-49fd-91c2-c484ddad694d",
+      "createdByType": "Application",
+      "lastModifiedAt": "2023-09-26T03:24:09.589345+00:00",
+      "lastModifiedBy": "0609ced8-c8f7-49fd-91c2-c484ddad694d",
+      "lastModifiedByType": "Application"
+    },
+    "type": "Microsoft.Authorization/policyAssignments"
+  }
+]
 ```
 
 ### 2. Build an Image with Packer
 
-```sh
-:~/Deploying_a_Web_Server_in_Azure$ packer build server.json
+```poweshell
+PS C:\Deploying a Web Server in Azure> packer build .\server.json
+Warning: Bundled plugins used
+
+This template relies on the use of plugins bundled into the Packer binary.
+The practice of bundling external plugins into Packer will be removed in an
+upcoming version.
+
+To remove this warning and ensure builds keep working you can install these
+external plugins with the 'packer plugins install' command
+
+* packer plugins install github.com/hashicorp/azure
+
+Alternatively, if you upgrade your templates to HCL2, you can use 'packer init'
+with a 'required_plugins' block to automatically install external plugins.
+
+You can try HCL2 by running 'packer hcl2_upgrade
+C:\Users\luiyi\OneDrive\Documents\Projects\Deploying a Web Server in
+Azure\server.json'
+
+
 azure-arm: output will be in this color.
 
 ==> azure-arm: Running builder ...
-    azure-arm: Creating Azure Resource Manager (ARM) client ...
-==> azure-arm: Getting source image id for the deployment ...
-==> azure-arm:  -> SourceImageName: '/subscriptions/{user `subscrition_id`}/providers/Microsoft.Compute/locations/East US/publishers/Canonical/ArtifactTypes/vmimage/offers/UbuntuServer/skus/18.04-LTS/versions/latest'
-==> azure-arm: Creating resource group ...
-==> azure-arm:  -> ResourceGroupName : 'pkr-Resource-Group-f45edmeyio'
-==> azure-arm:  -> Location          : 'East US'
-==> azure-arm:  -> Tags              :
-==> azure-arm: Validating deployment template ...
-==> azure-arm:  -> ResourceGroupName : 'pkr-Resource-Group-f45edmeyio'
-==> azure-arm:  -> DeploymentName    : 'pkrdpf45edmeyio'
-==> azure-arm: Deploying deployment template ...
-==> azure-arm:  -> ResourceGroupName : 'pkr-Resource-Group-f45edmeyio'
-==> azure-arm:  -> DeploymentName    : 'pkrdpf45edmeyio'
-[...]
-==> Wait completed after 2 minutes 58 seconds
+Build 'azure-arm' errored after 5 milliseconds 194 microseconds: error fetching subscriptionID from VM metadata service for Managed Identity authentication: Get "http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01&format=json": dial tcp 169.254.169.254:80: connectex: A socket operation was attempted to an unreachable network.
+
+==> Wait completed after 5 milliseconds 194 microseconds
 
 ==> Some builds didn't complete successfully and had errors:
---> azure-arm: Script exited with non-zero exit status: 1. Allowed exit codes are: [0]
+--> azure-arm: error fetching subscriptionID from VM metadata service for Managed Identity authentication: Get "http://169.254.169.254/metadata/instance/compute?api-version=2017-08-01&format=json": dial tcp 169.254.169.254:80: connectex: A socket operation was attempted to an unreachable network.
 
 ==> Builds finished but no artifacts were created.
 ```
@@ -159,11 +223,12 @@ azure-arm: output will be in this color.
 ### 3. Terraform Plan
 
 ```sh
-~/Deploying_a_Web_Server_in_Azure$ terraform plan -out solution.plan
+PS C:\Users\luiyi\OneDrive\Documents\Projects\Deploying a Web Server in Azure> terraform plan -out solution.plan
 
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols: 
   + create
-  Terraform will perform the following actions:
+
+Terraform will perform the following actions:
 
   # azurerm_availability_set.main will be created
   + resource "azurerm_availability_set" "main" {
@@ -310,227 +375,11 @@ Terraform used the selected providers to generate the following execution plan. 
         }
     }
 
-  # azurerm_linux_virtual_machine.main[2] will be created
-  + resource "azurerm_linux_virtual_machine" "main" {
-      + admin_password                                         = (sensitive value)
-      + admin_username                                         = "Admin-username"
-      + allow_extension_operations                             = true
-      + availability_set_id                                    = (known after apply)
-      + bypass_platform_safety_checks_on_user_schedule_enabled = false
-      + computer_name                                          = (known after apply)
-      + disable_password_authentication                        = false
-      + extensions_time_budget                                 = "PT1H30M"
-      + id                                                     = (known after apply)
-      + location                                               = "eastus"
-      + max_bid_price                                          = -1
-      + name                                                   = "project-vm-3"
-      + network_interface_ids                                  = (known after apply)
-      + patch_assessment_mode                                  = "ImageDefault"
-      + patch_mode                                             = "ImageDefault"
-      + platform_fault_domain                                  = -1
-      + priority                                               = "Regular"
-      + private_ip_address                                     = (known after apply)
-      + private_ip_addresses                                   = (known after apply)
-      + provision_vm_agent                                     = true
-      + public_ip_address                                      = (known after apply)
-      + public_ip_addresses                                    = (known after apply)
-      + resource_group_name                                    = "project-resource"
-      + size                                                   = "Standard_D2s_v3"
-      + tags                                                   = {
-          + "Enviroment"  = "production"
-          + "ProjectName" = "project"
-        }
-      + virtual_machine_id                                     = (known after apply)
-
-      + os_disk {
-          + caching                   = "ReadWrite"
-          + disk_size_gb              = (known after apply)
-          + name                      = (known after apply)
-          + storage_account_type      = "Standard_LRS"
-          + write_accelerator_enabled = false
-        }
-
-      + source_image_reference {
-          + offer     = "UbuntuServer"
-          + publisher = "Canonical"
-          + sku       = "18.04-LTS"
-          + version   = "latest"
-        }
-    }
-
-  # azurerm_network_interface.main will be created
-  + resource "azurerm_network_interface" "main" {
-      + applied_dns_servers           = (known after apply)
-      + dns_servers                   = (known after apply)
-      + enable_accelerated_networking = false
-      + enable_ip_forwarding          = false
-      + id                            = (known after apply)
-      + internal_dns_name_label       = (known after apply)
-      + internal_domain_name_suffix   = (known after apply)
-      + location                      = "eastus"
-      + mac_address                   = (known after apply)
-      + name                          = "project-nic"
-      + private_ip_address            = (known after apply)
-      + private_ip_addresses          = (known after apply)
-      + resource_group_name           = "project-resource"
-      + virtual_machine_id            = (known after apply)
-
-      + ip_configuration {
-          + gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
-          + name                                               = "internal"
-          + primary                                            = (known after apply)
-          + private_ip_address                                 = (known after apply)
-          + private_ip_address_allocation                      = "Dynamic"
-          + private_ip_address_version                         = "IPv4"
-          + subnet_id                                          = (known after apply)
-        }
-    }
-
-  # azurerm_network_interface_backend_address_pool_association.main will be created
-  + resource "azurerm_network_interface_backend_address_pool_association" "main" {
-      + backend_address_pool_id = (known after apply)
-      + id                      = (known after apply)
-      + ip_configuration_name   = "project-configIp"
-      + network_interface_id    = (known after apply)
-    }
-
-  # azurerm_network_security_group.main will be created
-  + resource "azurerm_network_security_group" "main" {
-      + id                  = (known after apply)
-      + location            = "eastus"
-      + name                = "project-nsg"
-      + resource_group_name = "project-resource"
-      + security_rule       = [
-          + {
-              + access                                     = "Allow"
-              + description                                = ""
-              + destination_address_prefix                 = "10.0.1.0/24"
-              + destination_address_prefixes               = []
-              + destination_application_security_group_ids = []
-              + destination_port_range                     = "*"
-              + destination_port_ranges                    = []
-              + direction                                  = "Inbound"
-              + name                                       = "AllowSubnetConnection"
-              + priority                                   = 103
-              + protocol                                   = "*"
-              + source_address_prefix                      = "10.0.1.0/24"
-              + source_address_prefixes                    = []
-              + source_application_security_group_ids      = []
-              + source_port_range                          = "*"
-              + source_port_ranges                         = []
-            },
-          + {
-              + access                                     = "Allow"
-              + description                                = ""
-              + destination_address_prefix                 = "10.0.1.0/24"
-              + destination_address_prefixes               = []
-              + destination_application_security_group_ids = []
-              + destination_port_range                     = "*"
-              + destination_port_ranges                    = []
-              + direction                                  = "Outbound"
-              + name                                       = "AllowOutAccess"
-              + priority                                   = 104
-              + protocol                                   = "*"
-              + source_address_prefix                      = "10.0.1.0/24"
-              + source_address_prefixes                    = []
-              + source_application_security_group_ids      = []
-              + source_port_range                          = "*"
-              + source_port_ranges                         = []
-            },
-          + {
-              + access                                     = "Allow"
-              + description                                = ""
-              + destination_address_prefix                 = "10.0.1.0/24"
-              + destination_address_prefixes               = []
-              + destination_application_security_group_ids = []
-              + destination_port_range                     = "80"
-              + destination_port_ranges                    = []
-              + direction                                  = "Outbound"
-              + name                                       = "AllowTcpAccess"
-              + priority                                   = 104
-              + protocol                                   = "Tcp"
-              + source_address_prefix                      = (known after apply)
-              + source_address_prefixes                    = []
-              + source_application_security_group_ids      = []
-              + source_port_range                          = "*"
-              + source_port_ranges                         = []
-            },
-          + {
-              + access                                     = "Deny"
-              + description                                = ""
-              + destination_address_prefix                 = "10.0.1.0/24"
-              + destination_address_prefixes               = []
-              + destination_application_security_group_ids = []
-              + destination_port_range                     = "*"
-              + destination_port_ranges                    = []
-              + direction                                  = "Inbound"
-              + name                                       = "DenyInternetAccess"
-              + priority                                   = 101
-              + protocol                                   = "*"
-              + source_address_prefix                      = "Internet"
-              + source_address_prefixes                    = []
-              + source_application_security_group_ids      = []
-              + source_port_range                          = "*"
-              + source_port_ranges                         = []
-            },
-        ]
-    }
-
-  # azurerm_public_ip.main will be created
-  + resource "azurerm_public_ip" "main" {
-      + allocation_method       = "Dynamic"
-      + ddos_protection_mode    = "VirtualNetworkInherited"
-      + fqdn                    = (known after apply)
-      + id                      = (known after apply)
-      + idle_timeout_in_minutes = 4
-      + ip_address              = (known after apply)
-      + ip_version              = "IPv4"
-      + location                = "eastus"
-      + name                    = "project-pip"
-      + resource_group_name     = "project-resource"
-      + sku                     = "Basic"
-      + sku_tier                = "Regional"
-    }
-
-  # azurerm_resource_group.main will be created
-  + resource "azurerm_resource_group" "main" {
-      + id       = (known after apply)
-      + location = "eastus"
-      + name     = "project-resource"
-    }
-
-  # azurerm_subnet.internal will be created
-  + resource "azurerm_subnet" "internal" {
-      + address_prefixes                               = [
-          + "10.0.1.0/24",
-        ]
-      + enforce_private_link_endpoint_network_policies = (known after apply)
-      + enforce_private_link_service_network_policies  = (known after apply)
-      + id                                             = (known after apply)
-      + name                                           = "internal"
-      + private_endpoint_network_policies_enabled      = (known after apply)
-      + private_link_service_network_policies_enabled  = (known after apply)
-      + resource_group_name                            = "project-resource"
-      + virtual_network_name                           = "project-network"
-    }
-
-  # azurerm_virtual_network.main will be created
-  + resource "azurerm_virtual_network" "main" {
-      + address_space       = [
-          + "10.0.0.0/16",
-        ]
-      + dns_servers         = (known after apply)
-      + guid                = (known after apply)
-      + id                  = (known after apply)
-      + location            = "eastus"
-      + name                = "project-network"
-      + resource_group_name = "project-resource"
-      + subnet              = (known after apply)
-    }
+[...]
 
 Plan: 13 to add, 0 to change, 0 to destroy.
 
-───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
 
 Saved the plan to: solution.plan
 
