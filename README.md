@@ -222,7 +222,7 @@ Build 'azure-arm' errored after 5 milliseconds 194 microseconds: error fetching 
 
 ### 3. Terraform Plan
 
-```sh
+```powershell
 PS C:\Users\luiyi\OneDrive\Documents\Projects\Deploying a Web Server in Azure> terraform plan -out solution.plan
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols: 
