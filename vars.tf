@@ -3,7 +3,7 @@
 
 variable "prefix" {
   description = "The prefix which should be used for all resources in this project"
-  default = "project"
+  default     = "Azuredevops"
 }
 
 variable "location" {
@@ -13,7 +13,7 @@ variable "location" {
 
 variable "vm_number" {
   description = "The number of the VMs"
-  default = 3
+  default     = 3
 }
 
 variable "username" {
